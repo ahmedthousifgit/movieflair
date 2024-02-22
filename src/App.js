@@ -1,13 +1,25 @@
-import { useEffect } from "react";
+import { useState,useEffect } from "react";
 import "./App.css";
 import SearchIcon from "./search.svg";
+import MovieCard from "./MovieCard";
 const API_URL = "http://www.omdbapi.com?apiKey=1f451356";
 
+const movie1 = {
+  Title: "The Lego Batman Movie",
+  Year: "2017",
+  imdbID: "tt4116284",
+  Type: "movie",
+  Poster:
+    "https://m.media-amazon.com/images/M/MV5BMTcyNTEyOTY0M15BMl5BanBnXkFtZTgwOTAyNzU3MDI@._V1_SX300.jpg",
+};
+
 const App = () => {
+  const [movies,setMovies]=useState([])
+
   const searchMovies = async (title) => {
     const response = await fetch(`${API_URL}&s=${title}`);
     const data = await response.json();
-    console.log(data);
+    setMovies(data.Search);
   };
 
   useEffect(() => {
@@ -24,10 +36,27 @@ const App = () => {
           value="Superman"
           onChange={() => {}}
         />
-        <img src={SearchIcon} alt="search" onCanPlay={() => {}} />
+        <img src={SearchIcon} alt="search" onClick={() => {}} />
       </div>
 
-      <div className="container"></div>
+      {
+        movies?.length > 0
+        ? (
+       <div className="container">
+        {movies.map((movie)=>(
+          <MovieCard movie={movie}/>
+        ))}
+       </div>
+        ): (
+          <div className="empty">
+            <h2>No movies found</h2>
+          </div>
+        )
+      }
+
+      
+
+
     </div>
   );
 };
